@@ -1,0 +1,60 @@
+{
+  "name": "interval",
+  "version": "0.0.1",
+  "description": "Interval ear training",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./node_modules/rocketship/src/main.js serve",
+    "test": "node ./node_modules/rocketship/src/main.js test lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jnetterf/interval.git"
+  },
+  "author": "",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/jnetterf/interval/issues"
+  },
+  "homepage": "https://github.com/jnetterf/interval#readme",
+  "dependencies": {
+    "classnames": "2.1.3",
+    "history": "1.9.1",
+    "invariant": "2.1.0",
+    "lodash": "3.10.1",
+    "musicxml-interfaces": "0.0.6",
+    "opentype": "nodebox/opentype.js#0.4.7",
+    "react": "0.14.0-rc1",
+    "react-bootstrap": "0.25.100-react-pre.1",
+    "react-dom": "0.14.0-rc1",
+    "react-redux": "2.1.2",
+    "react-router": "1.0.0-rc1",
+    "redux": "3.0.0",
+    "redux-thunk": "0.1.0",
+    "webcola": "tgdwyer/WebCola#326dc8e9e",
+    "whatwg-fetch": "0.9.0"
+  },
+  "devDependencies": {
+    "rocketship": "0.0.4",
+    "tsd": "0.6.4"
+  },
+  "rocketship": {
+    "devServer": {
+      "host": "localhost",
+      "port": "8080"
+    },
+    "assets": {
+      "contentBase": "static",
+      "publicPath": "/"
+    },
+    "output": {
+      "filename": "dist.js",
+      "directory": "dist"
+    },
+    "tsconfig": "tsconfig.json"
+  },
+  "browser": {
+    "source-map-support": false,
+    "fs": false
+  }
+}
