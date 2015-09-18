@@ -45,6 +45,9 @@ class Synth extends React.Component<IProps, IState> {
     }
     
     componentWillUpdate(nextProps: IProps, nextState: IState) {
+        if (!nextState.remote) {
+            return;
+        }
         if (nextState && nextState.remote.ready && (!this.state.remote || !this.state.remote.ready)) {
             if (this.props.onReady) {
                 this.props.onReady();
