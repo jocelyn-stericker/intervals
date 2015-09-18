@@ -44,6 +44,7 @@ Intervals uses a few tools. Links here are for documentation
    an overview of types. Babel provides an excellent [ES 2015 guide](https://babeljs.io/docs/learn-es2015/)
  - [React router](https://github.com/rackt/react-router) for URLs.
  - [Redux](https://rackt.github.io/redux/) for actions
+ - [React bootstrap](https://react-bootstrap.github.io/components.html) for components.
  - CSS modules
 
 ### Potentially confusing ES 2015/TS features
