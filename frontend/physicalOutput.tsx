@@ -46,7 +46,7 @@ class PhysicalOutput extends React.Component<IProps, IState> {
         dragonEngineState: IEngineState;
     };
 
-    getChildContext() {
+    getChildContext(): any {
         if (!this.context.dragonEngineState) {
             return {};
         }

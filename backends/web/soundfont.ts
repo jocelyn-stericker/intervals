@@ -80,8 +80,8 @@ class WebSoundfont extends Effect {
             10: "Bb",
             11: "B"
         }
-        let noteName = NOTE_NAMES[(ev.note*1 + 60) % 12];
-        let octave = Math.floor(ev.note*1 / 12);
+        let noteName = NOTE_NAMES[(1 * ev.note + 60) % 12];
+        let octave = Math.floor(ev.note * 1 / 12);
         let key = noteName + octave;
         switch (ev.type) {
             case "NOTE_ON":
