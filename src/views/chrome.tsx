@@ -49,6 +49,11 @@ export default class Chrome extends React.Component<IProps, IState> {
                             About
                         </Link>
                     </li>
+                    <li role="presentation">
+                        <Link to="/intervalSelection">
+                            Interval Selection
+                        </Link>
+                    </li>
                 </Nav>
             </Navbar>
 
