@@ -40,7 +40,8 @@ export function reducer(state: IAppState, action: IAction) {
         state = {
             initialized: true,
             enabledNotes: {},
-            count: 0
+            count: 0,
+            intervals: []
         };
     }
 

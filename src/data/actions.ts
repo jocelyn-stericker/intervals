@@ -3,10 +3,15 @@ import invariant = require("invariant");
 
 export type ThunkFn = (dispatch: (msg: any) => any, getState?: () => IAppState) => void;
 
+export interface IInterval {
+    semitones: number;
+}
+
 export interface IAppState {
     initialized: boolean;
     count: number;
     enabledNotes: {[key: string]: boolean};
+    intervals: IInterval[];
 }
 
 /**
@@ -30,6 +35,14 @@ export function increment(count: number) {
         type: Action[Action.INCREMENT],
         count, // Equivilent to count: count
     };
+}
+
+export function incrementTwice(): ThunkFn {
+    return (dispatch: (msg: any) => any, getState?: () => IAppState) => {
+        //function
+        dispatch(increment(1));
+        dispatch(increment(1));
+    }
 }
 
 export function noteOn(note: number, velocity: number) {
