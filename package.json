@@ -23,7 +23,7 @@
     "invariant": "2.1.0",
     "lodash": "3.10.1",
     "musicxml-interfaces": "0.0.6",
-    "opentype": "nodebox/opentype.js#0.4.7",
+    "opentype.js": "nodebox/opentype.js#0.4.7",
     "react": "0.14.0-rc1",
     "react-bootstrap": "0.25.100-react-pre.1",
     "react-dom": "0.14.0-rc1",
@@ -37,7 +37,7 @@
     "whatwg-fetch": "0.9.0"
   },
   "devDependencies": {
-    "rocketship": "0.0.4",
+    "rocketship": "0.0.7",
     "tsd": "0.6.4"
   },
   "rocketship": {
@@ -51,7 +51,8 @@
     },
     "output": {
       "filename": "dist.js",
-      "directory": "dist"
+      "directory": "dist",
+      "publicPath": "/"
     },
     "tsconfig": "tsconfig.json"
   },
