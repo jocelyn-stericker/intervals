@@ -3,7 +3,18 @@ import invariant = require("invariant");
 
 export type ThunkFn = (dispatch: (msg: any) => any, getState?: () => IAppState) => void;
 
+export enum IntervalQuality {
+    Perfect,
+    Major,
+    Minor,
+    Diminished,
+    Augmented
+}
+
 export interface IInterval {
+    name: string;
+    size: number;
+    quality: IntervalQuality;
     semitones: number;
 }
 

@@ -1,3 +1,13 @@
-.main {
-    color: red;
+.showgrid {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.emptyCell {
+    background-color: blue;
+}
+
+.headerRow {
+    font-weight: bold;
+    font-size: large;
 }
