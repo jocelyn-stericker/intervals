@@ -5,6 +5,7 @@ import {Navbar, Nav, NavItem} from "react-bootstrap";
 import {Link} from "react-router";
 import {connect} from "react-redux";
 const {DevTools, DebugPanel, LogMonitor} = IS_DEV && require("redux-devtools/lib/react");
+const ChromeCSS = require("./chrome.css");
 
 import Store from "../data/store";
 import {IAppState} from "../data/actions";
@@ -57,7 +58,9 @@ export default class Chrome extends React.Component<IProps, IState> {
                 </Nav>
             </Navbar>
 
-            {this.props.children}
+            <div className={ChromeCSS.content}>
+                {this.props.children}
+            </div>
         </div>;
     }
 }
