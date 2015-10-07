@@ -1,6 +1,6 @@
 import {extend} from "lodash";
 
-import {IAppState, IAction, Action} from "./actions";
+import {IAppState, IAction, Action, IInterval} from "./actions";
 
 let _reducers: {[key: string]: ((state: IAppState, action: IAction) => IAppState)} = {};
 
@@ -30,6 +30,12 @@ _reducers[Action.NOTE_OFF] = (state: IAppState, action: {note: number}) => {
     delete state.enabledNotes[action.note];
     return state;
 };
+
+_reducers[Action.SET_INTERVALS] = (state: IAppState, action: {intervals: IInterval[]}) => {
+    state = extend({}, state) as IAppState;
+    state.intervals = action.intervals;
+    return state;
+}
 
 export function reducer(state: IAppState, action: IAction) {
     if (Action[action.type] in _reducers) {

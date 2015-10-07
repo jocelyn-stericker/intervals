@@ -1,8 +1,9 @@
 import React = require("react");
-import {IInterval, IntervalQuality} from "../data/actions";
-import {Tabs, Tab, Grid, Row, Col, Input} from "react-bootstrap";
-import {map, find, include, times, union, without} from "lodash";
-const classNames = require("classNames");
+import {connect} from "react-redux";
+import {IInterval, IntervalQuality, IAppState, setIntervals} from "../data/actions";
+import {Tabs, Tab, Grid, Row, Col, Input, Button} from "react-bootstrap";
+import {map, find, include, times, union, without, filter} from "lodash";
+import classNames = require("classnames");
 
 const IntervalSelectionCSS = require("./intervalSelection.css")
 
@@ -185,30 +186,34 @@ const intervals: IInterval[] = [
 ];
 
 export interface IProps {
-    onIntervalsChanged: (intervals: IInterval[]) => void;//this.props.onIntervalsChanged(this.props.intervals.concat(NEW INTERVAL))
-    //intervals: IInterval[]; Not currently needed
+    history: any; // Injected by router because this is top-level
+    dispatch: (action: any) => void; // Injected by @connect.
 }
 
 export interface IState {
     checkedIntervals: IInterval[];
 }
 
+@connect((state: IAppState) => ({
+}))
 export default class IntervalSelection extends React.Component<IProps, IState> {
     state: IState = {
-        checkedIntervals: [intervals[0]]
+        checkedIntervals: filter(intervals, interval => interval.size <= 8)
     }
     
-    onCheckboxClicked = (event: Event, interval: IInterval) => {
+    private _onCheckboxClicked = (event: Event, interval: IInterval) => {
         var newIntervals: IInterval[];
-        if(find(this.state.checkedIntervals, (checked) => checked === interval)){
-            newIntervals = without(this.state.checkedIntervals, interval);
+        if (find(this.state.checkedIntervals, (checked) => checked === interval)) {
+            newIntervals = without(this.state.checkedIntervals.slice(), interval);
         } else {
-            newIntervals = union(this.state.checkedIntervals, [interval]);
+            newIntervals = union(this.state.checkedIntervals.slice(), [interval]);
         }
-        this.setState({checkedIntervals : newIntervals});
+        this.setState({
+            checkedIntervals: newIntervals
+        });
     }
-    
-    renderInterval = (size: number, ...qualities: IntervalQuality[]) => {
+
+    private _renderInterval = (size: number, ...qualities: IntervalQuality[]) => {
         const interval = find(
             intervals,
             (interval) =>
@@ -219,14 +224,22 @@ export default class IntervalSelection extends React.Component<IProps, IState> {
         }
         // with includes, has to be the same instance.
         // see docs for deepEqual
-        return <Input type="checkbox" onClick={(event:Event) => this.onCheckboxClicked(event, interval)} checked={
+        return <Input type="checkbox" onClick={(event:Event) => this._onCheckboxClicked(event, interval)} checked={
             include(this.state.checkedIntervals, interval)}
                 label={<span>
                     <span className="visible-sm visible-md visible-lg">{interval.name}</span>
                     <span className="visible-xs">{interval.shortName}</span>
                 </span>} />
     }
-    
+
+    private _startTest = () => {
+        const {dispatch, history} = this.props;
+        const {checkedIntervals} = this.state;
+
+        dispatch(setIntervals(checkedIntervals)); // Set the intervals being tested
+        history.pushState(null, "/test", null); // Go to the test page.
+    }
+
     render() {
         return <div className={IntervalSelectionCSS.main}>
           <Tabs>
@@ -257,18 +270,18 @@ export default class IntervalSelection extends React.Component<IProps, IState> {
                         </Col>
                     </Row>
                   </span>
-                  {times(8, rowNum => <Row key={rowNum}>
+                  {times(7, rowNum => <Row key={rowNum}>
                     <Col xs={3} sm={3} md={3} lg={3} className={IntervalSelectionCSS.showgrid}>
-                      { this.renderInterval(rowNum + 1, IntervalQuality.Perfect, IntervalQuality.Major) }
+                      { this._renderInterval(rowNum + 1, IntervalQuality.Perfect, IntervalQuality.Major) }
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3} className={IntervalSelectionCSS.showgrid}>
-                      { this.renderInterval(rowNum + 1, IntervalQuality.Minor, IntervalQuality.Diminished) }
+                      { this._renderInterval(rowNum + 1, IntervalQuality.Minor, IntervalQuality.Diminished) }
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3} className={IntervalSelectionCSS.showgrid}>
-                      { this.renderInterval(rowNum + 8, IntervalQuality.Perfect, IntervalQuality.Major) }
+                      { this._renderInterval(rowNum + 8, IntervalQuality.Perfect, IntervalQuality.Major) }
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3} className={IntervalSelectionCSS.showgrid}>
-                      { this.renderInterval(rowNum + 8, IntervalQuality.Minor, IntervalQuality.Diminished) }
+                      { this._renderInterval(rowNum + 8, IntervalQuality.Minor, IntervalQuality.Diminished) }
                     </Col>
                   </Row>)}
                 </Grid> 
@@ -281,6 +294,9 @@ export default class IntervalSelection extends React.Component<IProps, IState> {
               These combinations are not implemented yet. Please use the individual intervals tab instead.
             </Tab>
           </Tabs>
+          <Button bsStyle="primary" onClick={this._startTest} className={IntervalSelectionCSS.actions}>
+            Start test »
+          </Button>
         </div>;
     }
 }

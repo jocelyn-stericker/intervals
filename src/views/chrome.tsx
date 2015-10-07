@@ -4,8 +4,8 @@ import React = require("react");
 import {Navbar, Nav, NavItem} from "react-bootstrap";
 import {Link} from "react-router";
 import {connect} from "react-redux";
+import classNames = require("classnames");
 const {DevTools, DebugPanel, LogMonitor} = IS_DEV && require("redux-devtools/lib/react");
-const classNames = require("classNames");
 const ChromeCSS = require("./chrome.css");
 
 import Store from "../data/store";

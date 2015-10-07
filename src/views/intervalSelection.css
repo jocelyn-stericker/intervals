@@ -20,3 +20,8 @@
 .headerRow .showgrid {
     line-height: 40px;
 }
+
+.actions {
+    margin-top: 10px;
+    float: right;
+}
