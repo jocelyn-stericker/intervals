@@ -1,189 +1,11 @@
 import React = require("react");
 import {connect} from "react-redux";
-import {IInterval, IntervalQuality, IAppState, setIntervals} from "../data/actions";
+import {IInterval, IntervalQuality, IAppState, INTERVALS} from "../data/actions";
 import {Tabs, Tab, Grid, Row, Col, Input, Button} from "react-bootstrap";
 import {map, find, include, times, union, without, filter} from "lodash";
 import classNames = require("classnames");
 
 const IntervalSelectionCSS = require("./intervalSelection.css")
-
-const intervals: IInterval[] = [
-    {
-        name: "Unison",
-        shortName: "Unison",
-        size: 1,
-        quality: IntervalQuality.Perfect,
-        semitones: 0
-    },
-    {
-        name: "Minor Second",
-        shortName: "m2",
-        size: 2,
-        quality: IntervalQuality.Minor,
-        semitones: 1
-    },
-    {
-        name: "Major Second",
-        shortName: "M2",
-        size: 2,
-        quality: IntervalQuality.Major,
-        semitones: 2
-    },
-    {
-        name: "Minor Third",
-        shortName: "m3",
-        size: 3,
-        quality: IntervalQuality.Minor,
-        semitones: 3
-    },
-    {
-        name: "Major Third",
-        shortName: "M3",
-        size: 3,
-        quality: IntervalQuality.Major,
-        semitones: 4
-    },
-    {
-        name: "Perfect Fourth",
-        shortName: "P4",
-        size: 4,
-        quality: IntervalQuality.Perfect,
-        semitones: 5
-    },
-    {
-        name: "Dimished Fifth",
-        shortName: "dim5",
-        size: 5,
-        quality: IntervalQuality.Diminished,
-        semitones: 6
-    },
-    {
-        name: "Perfect Fifth",
-        shortName: "P5",
-        size: 5,
-        quality: IntervalQuality.Perfect,
-        semitones: 7
-    },
-    {
-        name: "Minor Sixth",
-        shortName: "m6",
-        size: 6,
-        quality: IntervalQuality.Minor,
-        semitones: 8
-    },
-    {
-        name: "Major Sixth",
-        shortName: "M6",
-        size: 6,
-        quality: IntervalQuality.Major,
-        semitones: 9
-    },
-    {
-        name: "Minor Seventh",
-        shortName: "m7",
-        size: 7,
-        quality: IntervalQuality.Minor,
-        semitones: 10
-    },
-    {
-        name: "Major Seventh",
-        shortName: "M7",
-        size: 7,
-        quality: IntervalQuality.Major,
-        semitones: 11
-    },
-    {
-        name: "Perfect Octave",
-        shortName: "P8",
-        size: 8,
-        quality: IntervalQuality.Perfect,
-        semitones: 12
-    },
-    {
-        name: "Minor Ninth",
-        shortName: "m9",
-        size: 9,
-        quality: IntervalQuality.Minor,
-        semitones: 13
-    },
-    {
-        name: "Major Ninth",
-        shortName: "M9",
-        size: 9,
-        quality: IntervalQuality.Major,
-        semitones: 14
-    },
-    {
-        name: "Minor Tenth",
-        shortName: "m10",
-        size: 10,
-        quality: IntervalQuality.Minor,
-        semitones: 15
-    },
-    {
-        name: "Major Tenth",
-        shortName: "M10",
-        size: 10,
-        quality: IntervalQuality.Major,
-        semitones: 16
-    },
-    {
-        name: "Perfect Eleventh",
-        shortName: "P11",
-        size: 11,
-        quality: IntervalQuality.Perfect,
-        semitones: 17
-    },
-    {
-        name: "Diminished Twelfth",
-        shortName: "dim12",
-        size: 12,
-        quality: IntervalQuality.Diminished,
-        semitones: 18
-    },
-    {
-        name: "Perfect Twelfth",
-        shortName: "P12",
-        size: 12,
-        quality: IntervalQuality.Perfect,
-        semitones: 19
-    },
-    {
-        name: "Minor Thirteenth",
-        shortName: "m13",
-        size: 13,
-        quality: IntervalQuality.Minor,
-        semitones: 20
-    },
-    {
-        name: "Major Thirteenth",
-        shortName: "M13",
-        size: 13,
-        quality: IntervalQuality.Major,
-        semitones: 21
-    },
-    {
-        name: "Minor Fourteenth",
-        shortName: "m14",
-        size: 14,
-        quality: IntervalQuality.Perfect,
-        semitones: 22
-    },
-    {
-        name: "Major Fourteenth",
-        shortName: "M14",
-        size: 14,
-        quality: IntervalQuality.Major,
-        semitones: 23
-    },
-    {
-        name: "Perfect Fifteenth",
-        shortName: "P15",
-        size: 15,
-        quality: IntervalQuality.Perfect,
-        semitones: 24
-    }
-];
 
 export interface IProps {
     history: any; // Injected by router because this is top-level
@@ -198,7 +20,7 @@ export interface IState {
 }))
 export default class IntervalSelection extends React.Component<IProps, IState> {
     state: IState = {
-        checkedIntervals: filter(intervals, interval => interval.size <= 8)
+        checkedIntervals: filter(INTERVALS, interval => interval.size <= 8)
     }
     
     private _onCheckboxClicked = (event: Event, interval: IInterval) => {
@@ -215,7 +37,7 @@ export default class IntervalSelection extends React.Component<IProps, IState> {
 
     private _renderInterval = (size: number, ...qualities: IntervalQuality[]) => {
         const interval = find(
-            intervals,
+            INTERVALS,
             (interval) =>
                 interval.size === size && include(qualities, interval.quality)
         );
@@ -236,8 +58,8 @@ export default class IntervalSelection extends React.Component<IProps, IState> {
         const {dispatch, history} = this.props;
         const {checkedIntervals} = this.state;
 
-        dispatch(setIntervals(checkedIntervals)); // Set the intervals being tested
-        history.pushState(null, "/test", null); // Go to the test page.
+        const intervals = map(checkedIntervals, interval => interval.shortName).join(",");
+        history.pushState(null, `/test/${intervals}`, null); // Go to the test page.
     }
 
     render() {

@@ -26,7 +26,7 @@ import Test from "./views/test";
                 <Route path="/" component={Home} />
                 <Route path="/about" component={About} />
                 <Route path="/intervalSelection" component={IntervalSelection} />
-                <Route path="/test" component={Test} />
+                <Route path="/test/:intervals" component={Test} />
             </Route>
         </Router>
     </Provider>, document.getElementById("root"));

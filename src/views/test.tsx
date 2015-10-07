@@ -1,13 +1,18 @@
 import React = require("react");
 import {connect} from "react-redux";
-import {sample, random, without} from "lodash";
+import {sample, random, without, map, find, isEqual, delay} from "lodash";
 import {Button} from "react-bootstrap"
 
-import {IAppState, IInterval, playInterval} from "../data/actions";
+import {IAppState, IInterval, playInterval, INTERVALS} from "../data/actions";
 
 export interface IProps {
-    intervals: IInterval[];
     playingInterval: boolean;
+    params: {
+        /**
+         * Comma seperated short names
+         */
+        intervals: string;
+    }; // Injected by router
     dispatch: (action: any) => void; // Injected by @connect.
 }
 
@@ -24,8 +29,7 @@ export interface IState {
 
 @connect((state: IAppState) => ({
     count: state.count, // See count in props
-    playingInterval: state.playingInterval,
-    intervals: state.intervals
+    playingInterval: state.playingInterval
 }))
 export default class Test extends React.Component<IProps, IState> {
     state: IState = {
@@ -46,10 +50,19 @@ export default class Test extends React.Component<IProps, IState> {
             currentRoot: random(60, 80, false /* not floating-point */)
         });
     }
+    
+    _extractIntervals(props: IProps): IInterval[] {
+        const {intervals} = props.params;
+        return map(intervals.split(","), interval => find(INTERVALS, {
+            shortName: interval
+        }));
+    }
 
     render() {
-        const {intervals, dispatch, playingInterval} = this.props;
+        const {dispatch, playingInterval} = this.props;
         const {currentInterval} = this.state;
+        const intervals = this._extractIntervals(this.props);
+
         return <div>
             <div>
                 {JSON.stringify(currentInterval)}
@@ -66,16 +79,19 @@ export default class Test extends React.Component<IProps, IState> {
     }
 
     componentWillMount() {
-        this._pickInterval(this.props.intervals);
+        this._pickInterval(this._extractIntervals(this.props));
     }
     
     componentDidMount() {
-        this._playCurrentInterval();
+        delay(() => {
+            // TODO: Actually wait until samples have loaded!
+            this._playCurrentInterval();
+        }, 1000);
     }
     
     componentWillReceiveProps(nextProps: IProps) {
-        if (this.props.intervals !== nextProps.intervals) {
-            this._pickInterval(nextProps.intervals);
+        if (!isEqual(this._extractIntervals(this.props), this._extractIntervals(nextProps))) {
+            this._pickInterval(this._extractIntervals(nextProps));
         }
     }
     
