@@ -24,6 +24,7 @@ export interface IAppState {
     count: number;
     enabledNotes: {[key: string]: boolean};
     intervals: IInterval[];
+    playingInterval: boolean;
 }
 
 /**
@@ -33,7 +34,8 @@ export enum Action {
     INCREMENT,
     NOTE_ON,
     NOTE_OFF,
-    SET_INTERVALS
+    SET_INTERVALS,
+    PLAYING_INTERVAL_CHANGED
 }
 
 /**
@@ -80,13 +82,29 @@ export function setIntervals(intervals: IInterval[]) {
     };
 }
 
+function _startingInterval() {
+    return {
+        type: Action[Action.PLAYING_INTERVAL_CHANGED],
+        playingInterval: true
+    }
+}
+
+function _endingInterval() {
+    return {
+        type: Action[Action.PLAYING_INTERVAL_CHANGED],
+        playingInterval: false
+    }
+}
+
 export function playInterval(interval: IInterval, root: number): ThunkFn {
     return (dispatch: (msg: any) => any, getState?: () => IAppState) => {
+        dispatch(_startingInterval());
         dispatch(noteOn(root, random(80, 127)));
         delay(() => {
             dispatch(noteOff(root));
             dispatch(noteOn(root + interval.semitones, random(80, 127)));
             delay(() => {
+                dispatch(_endingInterval());
                 dispatch(noteOff(root + interval.semitones));
             }, random(200, 700));
         }, random(400, 700));

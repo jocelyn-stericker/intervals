@@ -1,12 +1,13 @@
 import React = require("react");
 import {connect} from "react-redux";
-import {sample, random} from "lodash";
+import {sample, random, without} from "lodash";
 import {Button} from "react-bootstrap"
 
 import {IAppState, IInterval, playInterval} from "../data/actions";
 
 export interface IProps {
     intervals: IInterval[];
+    playingInterval: boolean;
     dispatch: (action: any) => void; // Injected by @connect.
 }
 
@@ -23,6 +24,7 @@ export interface IState {
 
 @connect((state: IAppState) => ({
     count: state.count, // See count in props
+    playingInterval: state.playingInterval,
     intervals: state.intervals
 }))
 export default class Test extends React.Component<IProps, IState> {
@@ -37,38 +39,49 @@ export default class Test extends React.Component<IProps, IState> {
         dispatch(playInterval(currentInterval, currentRoot));
     }
 
-    _pickInterval = (intervals: IInterval[]) {
+    _pickInterval = (intervals: IInterval[]) => {
+        const {currentInterval} = this.state;
         this.setState({
-            currentInterval: sample(intervals),
+            currentInterval: sample(without(intervals, currentInterval)),
             currentRoot: random(60, 80, false /* not floating-point */)
         });
     }
 
     render() {
-        const {intervals, dispatch} = this.props;
+        const {intervals, dispatch, playingInterval} = this.props;
         const {currentInterval} = this.state;
         return <div>
             <div>
                 {JSON.stringify(currentInterval)}
             </div>
-            <Button onClick={this._playCurrentInterval}>
+            <Button onClick={this._playCurrentInterval} disabled={playingInterval}>
                 <span className="fa-play fa" />{"\u00a0"}
                 Play interval
             </Button>{"\u00a0"}
-            <Button onClick={() => this._pickInterval(intervals)}>
+            <Button onClick={() => this._pickInterval(intervals)} disabled={playingInterval}>
                 <span className="fa-forward fa" />{"\u00a0"}
                 Give up
             </Button>
         </div>;
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this._pickInterval(this.props.intervals);
+    }
+    
+    componentDidMount() {
+        this._playCurrentInterval();
     }
     
     componentWillReceiveProps(nextProps: IProps) {
         if (this.props.intervals !== nextProps.intervals) {
             this._pickInterval(nextProps.intervals);
+        }
+    }
+    
+    componentDidUpdate(oldProps: IProps, oldState: IState) {
+        if (this.state.currentInterval !== oldState.currentInterval) {
+            this._playCurrentInterval();
         }
     }
 }

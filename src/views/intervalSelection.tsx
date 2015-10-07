@@ -241,6 +241,8 @@ export default class IntervalSelection extends React.Component<IProps, IState> {
     }
 
     render() {
+        const isValid = this.state.checkedIntervals.length > 1;
+
         return <div className={IntervalSelectionCSS.main}>
           <Tabs>
             <Tab eventKey={1} title="Individual Intervals">
@@ -294,7 +296,8 @@ export default class IntervalSelection extends React.Component<IProps, IState> {
               These combinations are not implemented yet. Please use the individual intervals tab instead.
             </Tab>
           </Tabs>
-          <Button bsStyle="primary" onClick={this._startTest} className={IntervalSelectionCSS.actions}>
+          <Button bsStyle="primary" onClick={this._startTest} className={IntervalSelectionCSS.actions}
+                disabled={!isValid}>
             Start test »
           </Button>
         </div>;

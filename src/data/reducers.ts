@@ -37,6 +37,12 @@ _reducers[Action.SET_INTERVALS] = (state: IAppState, action: {intervals: IInterv
     return state;
 }
 
+_reducers[Action.PLAYING_INTERVAL_CHANGED] = (state: IAppState, action: {playingInterval: boolean}) => {
+    state = extend({}, state) as IAppState;
+    state.playingInterval = action.playingInterval;
+    return state;
+}
+
 export function reducer(state: IAppState, action: IAction) {
     if (Action[action.type] in _reducers) {
         return _reducers[Action[action.type]](state, action);
@@ -47,7 +53,8 @@ export function reducer(state: IAppState, action: IAction) {
             initialized: true,
             enabledNotes: {},
             count: 0,
-            intervals: []
+            intervals: [],
+            playingInterval: false
         };
     }
 
