@@ -7,6 +7,30 @@
     padding: 5px 10px;
 }
 
+.OptionButton {
+    transition: background-color 0.1s ease-in-out;
+    background-color: white;
+}
+
+.OptionButton.badGuess {
+    text-decoration: line-through;
+    color: red;
+}
+
+.page.failed .OptionButton.badGuess {
+    background-color: red;
+}
+
+.page.gotIt .OptionButton.correct {
+    background-color: green;
+    color: white;
+}
+
+.page.gaveUp .OptionButton.correct {
+    background-color: #4285f4;
+    color: white;
+}
+
 .Actions {
     float: right;
     margin-right: -13px;
@@ -19,4 +43,15 @@
         padding: 10px 0 0 0;
         margin-left: -12px;
     }
+}
+
+.page:not(.gotIt):not(.gaveUp) .playingCurrent {
+    border: 1px solid #4285f4 !important;
+    border-radius: 4px;
+    color: #4285f4 !important;
+}
+
+.explanation {
+    color: #aaa;
+    padding-left: 10px;
 }
