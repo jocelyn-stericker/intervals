@@ -1,9 +1,11 @@
 import React = require("react");
 import {connect} from "react-redux";
 import {sample, random, without, map, find, isEqual, delay} from "lodash";
-import {Button} from "react-bootstrap"
+import {Button, Col} from "react-bootstrap";
 
 import {IAppState, IInterval, playInterval, INTERVALS} from "../data/actions";
+
+const TestCSS = require("./test.css");
 
 export interface IProps {
     playingInterval: boolean;
@@ -57,6 +59,17 @@ export default class Test extends React.Component<IProps, IState> {
             shortName: interval
         }));
     }
+    
+    _guess = (interval: IInterval) => {
+        const {currentInterval} = this.state;
+        const intervals = this._extractIntervals(this.props);
+        if (isEqual(interval, currentInterval)) {
+            alert("Correct!");
+            this._pickInterval(intervals);
+        } else {
+            alert("Try again.");
+        }
+    }
 
     render() {
         const {dispatch, playingInterval} = this.props;
@@ -64,17 +77,27 @@ export default class Test extends React.Component<IProps, IState> {
         const intervals = this._extractIntervals(this.props);
 
         return <div>
-            <div>
-                {JSON.stringify(currentInterval)}
+            <h3>
+                What interval was that?
+                <div className={TestCSS.Actions}>
+                    <Button onClick={this._playCurrentInterval} disabled={playingInterval} bsStyle="link">
+                        <span className="fa-play fa" />{"\u00a0"}
+                        Play again
+                    </Button>{"\u00a0"}
+                    <Button onClick={() => this._pickInterval(intervals)} disabled={playingInterval} bsStyle="link">
+                        <span className="fa-forward fa" />{"\u00a0"}
+                        Give up
+                    </Button>
+                </div>
+            </h3>
+            <div className={TestCSS.OptionGroup}>
+                {map(intervals, interval => <Col xs={6} sm={3} md={2} lg={2} className={TestCSS.Option}>
+                    <Button key={interval.shortName} style={{width: "100%"}} onClick={() => this._guess(interval)}>
+                        {interval.name}
+                    </Button>
+                </Col>)}
             </div>
-            <Button onClick={this._playCurrentInterval} disabled={playingInterval}>
-                <span className="fa-play fa" />{"\u00a0"}
-                Play interval
-            </Button>{"\u00a0"}
-            <Button onClick={() => this._pickInterval(intervals)} disabled={playingInterval}>
-                <span className="fa-forward fa" />{"\u00a0"}
-                Give up
-            </Button>
+            <br />
         </div>;
     }
 

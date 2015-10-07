@@ -1,0 +1,22 @@
+.OptionGroup {
+    margin: 0 -10px;
+    padding-top: 10px;
+}
+
+.Option {
+    padding: 5px 10px;
+}
+
+.Actions {
+    float: right;
+    margin-right: -13px;
+}
+
+@media (max-width: 600px) {
+    .Actions {
+        float: inherit;
+        display: block;
+        padding: 10px 0 0 0;
+        margin-left: -12px;
+    }
+}
