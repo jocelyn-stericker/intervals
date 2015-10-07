@@ -2,156 +2,182 @@ import React = require("react");
 import {IInterval, IntervalQuality} from "../data/actions";
 import {Tabs, Tab, Grid, Row, Col, Input} from "react-bootstrap";
 import {map, find, include, times, union, without} from "lodash";
+const classNames = require("classNames");
 
 const IntervalSelectionCSS = require("./intervalSelection.css")
 
 const intervals: IInterval[] = [
     {
         name: "Unison",
+        shortName: "Unison",
         size: 1,
         quality: IntervalQuality.Perfect,
         semitones: 0
     },
     {
         name: "Minor Second",
+        shortName: "m2",
         size: 2,
         quality: IntervalQuality.Minor,
         semitones: 1
     },
     {
         name: "Major Second",
+        shortName: "M2",
         size: 2,
         quality: IntervalQuality.Major,
         semitones: 2
     },
     {
         name: "Minor Third",
+        shortName: "m3",
         size: 3,
         quality: IntervalQuality.Minor,
         semitones: 3
     },
     {
         name: "Major Third",
+        shortName: "M3",
         size: 3,
         quality: IntervalQuality.Major,
         semitones: 4
     },
     {
         name: "Perfect Fourth",
+        shortName: "P4",
         size: 4,
         quality: IntervalQuality.Perfect,
         semitones: 5
     },
     {
         name: "Dimished Fifth",
+        shortName: "dim5",
         size: 5,
         quality: IntervalQuality.Diminished,
         semitones: 6
     },
     {
         name: "Perfect Fifth",
+        shortName: "P5",
         size: 5,
         quality: IntervalQuality.Perfect,
         semitones: 7
     },
     {
         name: "Minor Sixth",
+        shortName: "m6",
         size: 6,
         quality: IntervalQuality.Minor,
         semitones: 8
     },
     {
         name: "Major Sixth",
+        shortName: "M6",
         size: 6,
         quality: IntervalQuality.Major,
         semitones: 9
     },
     {
         name: "Minor Seventh",
+        shortName: "m7",
         size: 7,
         quality: IntervalQuality.Minor,
         semitones: 10
     },
     {
         name: "Major Seventh",
+        shortName: "M7",
         size: 7,
         quality: IntervalQuality.Major,
         semitones: 11
     },
     {
         name: "Perfect Octave",
+        shortName: "P8",
         size: 8,
         quality: IntervalQuality.Perfect,
         semitones: 12
     },
     {
         name: "Minor Ninth",
+        shortName: "m9",
         size: 9,
         quality: IntervalQuality.Minor,
         semitones: 13
     },
     {
         name: "Major Ninth",
+        shortName: "M9",
         size: 9,
         quality: IntervalQuality.Major,
         semitones: 14
     },
     {
         name: "Minor Tenth",
+        shortName: "m10",
         size: 10,
         quality: IntervalQuality.Minor,
         semitones: 15
     },
     {
         name: "Major Tenth",
+        shortName: "M10",
         size: 10,
         quality: IntervalQuality.Major,
         semitones: 16
     },
     {
         name: "Perfect Eleventh",
+        shortName: "P11",
         size: 11,
         quality: IntervalQuality.Perfect,
         semitones: 17
     },
     {
         name: "Diminished Twelfth",
+        shortName: "dim12",
         size: 12,
         quality: IntervalQuality.Diminished,
         semitones: 18
     },
     {
         name: "Perfect Twelfth",
+        shortName: "P12",
         size: 12,
         quality: IntervalQuality.Perfect,
         semitones: 19
     },
     {
         name: "Minor Thirteenth",
+        shortName: "m13",
         size: 13,
         quality: IntervalQuality.Minor,
         semitones: 20
     },
     {
         name: "Major Thirteenth",
+        shortName: "M13",
         size: 13,
         quality: IntervalQuality.Major,
         semitones: 21
     },
     {
         name: "Minor Fourteenth",
+        shortName: "m14",
         size: 14,
         quality: IntervalQuality.Perfect,
         semitones: 22
     },
     {
         name: "Major Fourteenth",
+        shortName: "M14",
         size: 14,
         quality: IntervalQuality.Major,
         semitones: 23
     },
     {
         name: "Perfect Fifteenth",
+        shortName: "P15",
         size: 15,
         quality: IntervalQuality.Perfect,
         semitones: 24
@@ -194,7 +220,11 @@ export default class IntervalSelection extends React.Component<IProps, IState> {
         // with includes, has to be the same instance.
         // see docs for deepEqual
         return <Input type="checkbox" onClick={(event:Event) => this.onCheckboxClicked(event, interval)} checked={
-            include(this.state.checkedIntervals, interval)} label={interval.name} />
+            include(this.state.checkedIntervals, interval)}
+                label={<span>
+                    <span className="visible-sm visible-md visible-lg">{interval.name}</span>
+                    <span className="visible-xs">{interval.shortName}</span>
+                </span>} />
     }
     
     render() {
@@ -203,39 +233,41 @@ export default class IntervalSelection extends React.Component<IProps, IState> {
             <Tab eventKey={1} title="Individual Intervals">
               <form>
                 <Grid>
-                  <Row className={IntervalSelectionCSS.headerRow}>
-                    <Col md={6} className={IntervalSelectionCSS.showgrid}>
-                      Simple
-                    </Col>
-                    <Col md={6} className={IntervalSelectionCSS.showgrid}>
-                      Compound
-                    </Col>
-                  </Row>
-                  <Row className={IntervalSelectionCSS.headerRow}>
-                    <Col md={3} className={IntervalSelectionCSS.showgrid}>
-                      Major and Perfect
-                    </Col>
-                    <Col md={3} className={IntervalSelectionCSS.showgrid}>
-                      Minor and Diminished
-                    </Col>
-                    <Col md={3} className={IntervalSelectionCSS.showgrid}>
-                      Major and Perfect
-                    </Col>
-                    <Col md={3} className={IntervalSelectionCSS.showgrid}>
-                      Minor and Diminished
-                    </Col>
-                  </Row>
+                  <span className={classNames("visible-sm", "visible-md", "visible-xl")}>
+                    <Row className={IntervalSelectionCSS.headerRow}>
+                        <Col xs={6} sm={6} md={6} lg={6} className={IntervalSelectionCSS.showgrid}>
+                        Simple
+                        </Col>
+                        <Col xs={6} sm={6} md={6} lg={6} className={IntervalSelectionCSS.showgrid}>
+                        Compound
+                        </Col>
+                    </Row>
+                    <Row className={IntervalSelectionCSS.headerRow}>
+                        <Col xs={3} sm={3} md={3} lg={3} className={IntervalSelectionCSS.showgrid}>
+                        Major <span className="visible-xs">HAI</span>and Perfect
+                        </Col>
+                        <Col xs={3} sm={3} md={3} lg={3} className={IntervalSelectionCSS.showgrid}>
+                        Minor and Diminished
+                        </Col>
+                        <Col xs={3} sm={3} md={3} lg={3} className={IntervalSelectionCSS.showgrid}>
+                        Major and Perfect
+                        </Col>
+                        <Col xs={3} sm={3} md={3} lg={3} className={IntervalSelectionCSS.showgrid}>
+                        Minor and Diminished
+                        </Col>
+                    </Row>
+                  </span>
                   {times(8, rowNum => <Row key={rowNum}>
-                    <Col md={3} className={IntervalSelectionCSS.showgrid}>
+                    <Col xs={3} sm={3} md={3} lg={3} className={IntervalSelectionCSS.showgrid}>
                       { this.renderInterval(rowNum + 1, IntervalQuality.Perfect, IntervalQuality.Major) }
                     </Col>
-                    <Col md={3} className={IntervalSelectionCSS.showgrid}>
+                    <Col xs={3} sm={3} md={3} lg={3} className={IntervalSelectionCSS.showgrid}>
                       { this.renderInterval(rowNum + 1, IntervalQuality.Minor, IntervalQuality.Diminished) }
                     </Col>
-                    <Col md={3} className={IntervalSelectionCSS.showgrid}>
+                    <Col xs={3} sm={3} md={3} lg={3} className={IntervalSelectionCSS.showgrid}>
                       { this.renderInterval(rowNum + 8, IntervalQuality.Perfect, IntervalQuality.Major) }
                     </Col>
-                    <Col md={3} className={IntervalSelectionCSS.showgrid}>
+                    <Col xs={3} sm={3} md={3} lg={3} className={IntervalSelectionCSS.showgrid}>
                       { this.renderInterval(rowNum + 8, IntervalQuality.Minor, IntervalQuality.Diminished) }
                     </Col>
                   </Row>)}

@@ -13,6 +13,7 @@ export enum IntervalQuality {
 
 export interface IInterval {
     name: string;
+    shortName: string;
     size: number;
     quality: IntervalQuality;
     semitones: number;

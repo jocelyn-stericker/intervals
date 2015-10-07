@@ -1,7 +1,12 @@
 .showgrid {
-    border: 1px solid black;
-    border-collapse: collapse;
-    height: 47px;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    height: 40px;
+    line-height: 22px;
+}
+
+.showgrid:last-of-type {
+    border-right: 1px solid #ddd;
 }
 
 .emptyCell {
@@ -9,6 +14,9 @@
 }
 
 .headerRow {
-    font-weight: bold;
-    font-size: large;
+    font-weight: 600;
+}
+
+.headerRow .showgrid {
+    line-height: 40px;
 }
