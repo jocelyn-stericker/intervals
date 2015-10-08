@@ -201,7 +201,7 @@ export interface IAppState {
     initialized: boolean;
     count: number;
     enabledNotes: {[key: string]: boolean};
-    playingInterval: boolean;
+    playingIntervals: boolean;
 }
 
 /**
@@ -251,14 +251,14 @@ export function noteOff(note: number) {
     };
 }
 
-function _startingInterval() {
+function _startingIntervals() {
     return {
         type: Action[Action.PLAYING_INTERVAL_CHANGED],
         playingInterval: true
     }
 }
 
-function _endingInterval() {
+function _endingIntervals() {
     return {
         type: Action[Action.PLAYING_INTERVAL_CHANGED],
         playingInterval: false
@@ -267,15 +267,32 @@ function _endingInterval() {
 
 export function playInterval(interval: IInterval, root: number): ThunkFn {
     return (dispatch: (msg: any) => any, getState?: () => IAppState) => {
-        dispatch(_startingInterval());
+        dispatch(_startingIntervals());
         dispatch(noteOn(root, random(80, 127)));
         delay(() => {
             dispatch(noteOff(root));
             dispatch(noteOn(root + interval.semitones, random(80, 127)));
             delay(() => {
-                dispatch(_endingInterval());
                 dispatch(noteOff(root + interval.semitones));
+                delay(() => {
+                    dispatch(noteOff(root));
+                    dispatch(noteOff(root + interval.semitones));
+                    dispatch(_endingIntervals());
+                }, random(200, 700))
+                dispatch(noteOn(root, random(80, 127)));
+                dispatch(noteOn(root + interval.semitones, random(80, 127)));
             }, random(200, 700));
         }, random(400, 700));
+    };
+}
+
+export function playIntervals(intervals: IInterval[], root: number): ThunkFn {
+    return (dispatch: (msg: any) => any, getState?: () => IAppState) => {
+        dispatch(_startingIntervals());
+        for(var i = 0; i < intervals.length; i++){
+            debugger;
+            playInterval(intervals[i], root);
+        }
+        dispatch(_endingIntervals());
     };
 }

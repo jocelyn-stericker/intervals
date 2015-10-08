@@ -17,8 +17,9 @@
     color: red;
 }
 
-.page.failed .OptionButton.badGuess {
+.page.failed .OptionButton.badGuess.latestGuess{
     background-color: red;
+    color: white;
 }
 
 .page.gotIt .OptionButton.correct {
@@ -46,9 +47,9 @@
 }
 
 .page:not(.gotIt):not(.gaveUp) .playingCurrent {
-    border: 1px solid #4285f4 !important;
     border-radius: 4px;
-    color: #4285f4 !important;
+    background-color: green;
+    color: white;
 }
 
 .explanation {

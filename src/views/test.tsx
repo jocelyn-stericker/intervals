@@ -4,12 +4,13 @@ import {sample, random, without, map, find, isEqual, delay, include} from "lodas
 import {Button, Col, Badge} from "react-bootstrap";
 import classNames = require("classnames");
 
-import {IAppState, IInterval, playInterval, INTERVALS} from "../data/actions";
+import {IAppState, IInterval, playIntervals, INTERVALS} from "../data/actions";
 
 const TestCSS = require("./test.css");
+const MAX_INTERVAL_DURATION = 2200;
 
 export interface IProps {
-    playingInterval: boolean;
+    playingIntervals: boolean;
     params: {
         /**
          * Comma seperated short names
@@ -39,7 +40,7 @@ export interface IState {
 
 @connect((state: IAppState) => ({
     count: state.count, // See count in props
-    playingInterval: state.playingInterval
+    playingIntervals: state.playingIntervals
 }))
 export default class Test extends React.Component<IProps, IState> {
     state: IState = {
@@ -53,10 +54,15 @@ export default class Test extends React.Component<IProps, IState> {
         playingCurrent: false
     };
    
-    _playCurrentInterval = () => {
+    _playCurrentInterval = (wrongGuess: IInterval) => {
         const {dispatch} = this.props;
         const {currentInterval, currentRoot} = this.state;
-        dispatch(playInterval(currentInterval, currentRoot));
+        var intervalsToPlay: IInterval[] = [];
+        if(wrongGuess){
+            intervalsToPlay.concat(wrongGuess);
+        }
+        intervalsToPlay.concat(currentInterval);
+        dispatch(playIntervals(intervalsToPlay, currentRoot));
         this.setState({
             playingCurrent: true
         });
@@ -71,7 +77,7 @@ export default class Test extends React.Component<IProps, IState> {
         const {currentInterval} = this.state;
         this.setState({
             currentInterval: sample(without(intervals, currentInterval)),
-            currentRoot: random(60, 80, false /* not floating-point */),
+            currentRoot: random(48, 68, false /* not floating-point */),
             currentGuesses: [],
             correct: false,
             gaveUp: false
@@ -107,20 +113,20 @@ export default class Test extends React.Component<IProps, IState> {
             }
             delay(() => {
                 this._pickInterval(intervals);
-            }, 1400);
+            }, MAX_INTERVAL_DURATION);
         } else {
             this.setState({
-                currentGuesses: [interval].concat(currentGuesses),
+                currentGuesses: currentGuesses.concat(interval),
                 failed: true,
                 ptsExplanation: ""
             });
-            dispatch(playInterval(interval, currentRoot));
+            dispatch(playIntervals([interval], currentRoot));
             delay(() => {
                 this.setState({
                     failed: false
                 });
                 this._playCurrentInterval();
-            }, 1400);
+            }, MAX_INTERVAL_DURATION);
         }
     }
     
@@ -142,7 +148,7 @@ export default class Test extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {dispatch, playingInterval} = this.props;
+        const {dispatch, playingIntervals} = this.props;
         const {currentInterval, points, currentGuesses, failed,
             correct, playingCurrent, gaveUp, ptsExplanation} = this.state;
         const intervals = this._extractIntervals(this.props);
@@ -167,7 +173,7 @@ export default class Test extends React.Component<IProps, IState> {
                 <div className={TestCSS.Actions}>
                     <Button
                             onClick={this._playCurrentInterval}
-                            disabled={playingInterval}
+                            disabled={playingIntervals}
                             bsStyle="link"
                             className={classNames({
                                 [TestCSS.playingCurrent]: playingCurrent
@@ -175,7 +181,7 @@ export default class Test extends React.Component<IProps, IState> {
                         <span className="fa-play fa" />{"\u00a0"}
                         Play again
                     </Button>{"\u00a0"}
-                    <Button onClick={this._giveUp} disabled={playingInterval} bsStyle="link">
+                    <Button onClick={this._giveUp} disabled={playingIntervals} bsStyle="link">
                         <span className="fa-forward fa" />{"\u00a0"}
                         Give up (-5 pts)
                     </Button>
@@ -186,10 +192,11 @@ export default class Test extends React.Component<IProps, IState> {
                     <Button key={interval.shortName}
                             style={{width: "100%"}}
                             onClick={() => this._guess(interval)}
-                            disabled={playingInterval || include(currentGuesses, interval)}
+                            disabled={playingIntervals || include(currentGuesses, interval)}
                             className={classNames(TestCSS.OptionButton, {
                                 [TestCSS.badGuess]: include(currentGuesses, interval),
-                                [TestCSS.correct]: interval === currentInterval
+                                [TestCSS.correct]: interval === currentInterval,
+                                [TestCSS.latestGuess]: interval === currentGuesses[currentGuesses.length - 1]
                             })}>
                         {interval.name}
                     </Button>
