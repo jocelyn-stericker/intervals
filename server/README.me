@@ -1,0 +1,17 @@
+## Compiling & Running
+
+Requires [Golang](https://golang.org)
+
+Run `go build` in the current folder, then run `./server`.
+
+The server will be available at `localhost:8000`.
+Build `dist.js` into `../dist/` for non-api endpoints to work.
+
+## Endpoints
+
+`GET /api/storage` - Get all data stored in the session
+`POST /api/storage` - Replace all data stored in the session
+
+In order for the POST to save properly, a CSRF token must be
+included in the `X-CSRF-Token` header. This can be found in the
+`INTERVALS_CSRF_TOKEN` cookie (accessible from JS).
