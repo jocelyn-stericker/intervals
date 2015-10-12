@@ -60,6 +60,11 @@ export default class Chrome extends React.Component<IProps, IState> {
                             Interval Selection
                         </Link>
                     </li>
+                    <li role="presentation">
+                        <Link to="/learn">
+                            Learning Intervals
+                        </Link>
+                    </li>
                 </Nav>
             </Navbar>
 

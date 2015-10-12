@@ -11,6 +11,11 @@ export enum IntervalQuality {
     Augmented
 }
 
+export interface INote {
+    midi: number;
+    type: number;
+}
+
 export interface IInterval {
     name: string;
     shortName: string;
@@ -211,7 +216,10 @@ export enum Action {
     INCREMENT,
     NOTE_ON,
     NOTE_OFF,
-    PLAYING_INTERVAL_CHANGED
+    PLAYING_INTERVAL_CHANGED,
+    PLAY_NOTE,
+    PLAY_SONG,
+    PLAY_INTERVAL
 }
 
 /**
@@ -249,6 +257,34 @@ export function noteOff(note: number) {
         type: Action[Action.NOTE_OFF],
         note
     };
+}
+
+export function playNote(note: number, duration: number): ThunkFn {
+    return (dispatch: (msg: any) => any, getState?: () => IAppState) => {
+        //dispatch(_startingInterval);
+        dispatch(noteOn(note, random(80, 127)));
+        delay(() => {
+            //dispatch(_endingInterval);
+            dispatch(noteOff(note));
+        }, duration);
+    };
+}
+
+export function playSong(notes: INote[], bpm: number, timeSigBot: number): ThunkFn {
+    return (dispatch: (msg: any) => any, getState?: () => IAppState) => {
+        var note = notes[0];
+        var duration = ((60 * timeSigBot) / (bpm * (1 / note.type))) * 1000;
+        // use midi = 0 as a rest
+        if (note.midi !=0) {
+            dispatch(playNote(note.midi, duration));
+            console.log("midi: " + note.midi + ", dur: " + duration + ", bpm: " + bpm);
+        }
+        if (notes.length != 1) {
+            delay(() => {
+                dispatch(playSong(notes.slice(1), bpm, timeSigBot));
+            }, duration);
+        }
+    }
 }
 
 function _startingInterval() {

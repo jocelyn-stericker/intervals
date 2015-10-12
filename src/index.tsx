@@ -15,6 +15,7 @@ import Chrome from "./views/chrome";
 import Home from "./views/home";
 import About from "./views/about";
 import IntervalSelection from "./views/intervalSelection";
+import Learn from "./views/learn";
 import Test from "./views/test";
 
 (function main() {
@@ -27,6 +28,7 @@ import Test from "./views/test";
                 <Route path="/about" component={About} />
                 <Route path="/intervalSelection" component={IntervalSelection} />
                 <Route path="/test/:intervals" component={Test} />
+                <Route path="/learn" component={Learn} />
             </Route>
         </Router>
     </Provider>, document.getElementById("root"));
