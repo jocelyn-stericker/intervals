@@ -131,3 +131,17 @@ export interface IDragonBackend {
     quit: () => void;
 }
 
+export interface IMidiEv {
+    /**
+     * NOTE_ON / NOTE_OFF
+     */
+    type: string;
+
+    note: number;
+
+    velocity: number;
+
+    channel: number;
+}
+
+

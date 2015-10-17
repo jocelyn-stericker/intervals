@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Lifecycle, IAudioDevice, IEffect, IEffectSpec, IConnection, IEngineState, ITransientMsg, IDragonBackend} from "../spec";
+import {Lifecycle, IAudioDevice, IEffect, IEffectSpec, IConnection, IEngineState,
+    ITransientMsg, IDragonBackend, IMidiEv} from "../spec";
 import {isEqual, find, findIndex, filter, forEach, some, times} from "lodash";
 
 import Soundfont from "./soundfont";
 import MidiBridge from "./midiBridge";
-import IMidiEv from "./midiEv";
 import Passthrough from "./passthrough";
 import ReceiverF from "./receiverF";
 import ReceiverM from "./receiverM";

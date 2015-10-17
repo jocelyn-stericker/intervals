@@ -17,21 +17,31 @@
  */
 
 import React = require("react");
+import {isEqual} from "lodash";
 
 import DAWComponent from "./dawComponent";
+import {IMidiEv} from "../backends/spec";
 
 export interface IProps {
     children?: any;
     ref?: string;
     channel: number;
     key?: any;
+    onCurrentEventsChanged?: (currentNotes: {[key: number]: IMidiEv}) => void;
 }
 export interface IState {
-    remote?: any;
+    remote?: {
+        currentNotes: {[key: number]: IMidiEv};
+    };
 }
 
 @DAWComponent("live.effects.midiBridge.MidiBridge", 2)
 class MidiBridge extends React.Component<IProps, IState> {
+    state: IState = {
+        remote: {
+            currentNotes: {}
+        }
+    };
 
     setRemoteState: (remoteState: any) => void;
 
@@ -57,6 +67,13 @@ class MidiBridge extends React.Component<IProps, IState> {
         return <span>
             {this.props.children}
         </span>;
+    }
+    
+    componentWillUpdate(nextProps: IProps, nextState: IState) {
+        if (this.props.onCurrentEventsChanged &&
+                !isEqual(nextState.remote.currentNotes, this.state.remote.currentNotes)) {
+            this.props.onCurrentEventsChanged(nextState.remote.currentNotes);
+        }
     }
 };
 

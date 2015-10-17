@@ -16,6 +16,7 @@ import Home from "./views/home";
 import About from "./views/about";
 import IntervalSelection from "./views/intervalSelection";
 import Test from "./views/test";
+import TestByEar from "./views/testByEar";
 
 (function main() {
     let history = createBrowserHistory();
@@ -27,6 +28,7 @@ import Test from "./views/test";
                 <Route path="/about" component={About} />
                 <Route path="/intervalSelection" component={IntervalSelection} />
                 <Route path="/test/:intervals" component={Test} />
+                <Route path="/test/:intervals/by-ear" component={TestByEar} />
             </Route>
         </Router>
     </Provider>, document.getElementById("root"));

@@ -17,10 +17,12 @@
  */
 
 import Effect, {IEffectArgs} from "./effect";
-import IMidiEv from "./midiEv";
+import {IMidiEv} from "../spec";
 
 class DummyMidiBridge extends Effect {
     state: any;
+    
+    currentNotes: {[key: number]: IMidiEv} = {};
 
     constructor(args: IEffectArgs) {
         super(args);
@@ -28,8 +30,14 @@ class DummyMidiBridge extends Effect {
     }
 
     midiEvent(ev: IMidiEv) {
+        let {currentNotes} = this;
+        if (ev.type === "NOTE_ON") {
+            currentNotes[ev.note] = ev;
+        } else if (ev.type === "NOTE_OFF") {
+            delete currentNotes[ev.note];
+        }
         this.toUI(JSON.stringify({
-            event: ev
+            currentNotes
         }));
     }
 

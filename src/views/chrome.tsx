@@ -8,6 +8,8 @@ import classNames = require("classnames");
 const {DevTools, DebugPanel, LogMonitor} = IS_DEV && require("redux-devtools/lib/react");
 const ChromeCSS = require("./chrome.css");
 
+import {IMidiEv} from "../dragon/backends/spec";
+
 import Store from "../data/store";
 import {IAppState} from "../data/actions";
 
@@ -19,19 +21,32 @@ export interface IProps {
 }
 
 export interface IState {
+    inputEvents: {[key: number]: IMidiEv};
 }
 
 @connect((state: IAppState) => ({enabledNotes: state.enabledNotes})) // Sets enabledNotes in props.
 export default class Chrome extends React.Component<IProps, IState> {
-    _onDragonMessage = (msg: any) => {
-        console.log(msg);
+    state: IState = {
+        inputEvents: {}
     };
-    _onDragonStateChanged = (msg: any) => {
-        console.log(msg);
+
+    private _onDragonMessage = (msg: any) => {
+        console.log("From Audio/MIDI system: ", msg);
     };
+
+    private _onDragonStateChanged = (msg: any) => {
+        console.log("From Audio/MIDI system: ", msg);
+    };
+
+    private _handleInputEventsChanged = (events: {[key: number]: IMidiEv}) => {
+        this.setState({
+            inputEvents: events
+        })
+    }
 
     render() {
         const {enabledNotes} = this.props;
+        const {inputEvents} = this.state;
         const toggleButton = {
             toggleButton: <button className="navbar-toggle fa fa-bars" type="button" style={{color: "#aaa"}} />
         };
@@ -40,7 +55,7 @@ export default class Chrome extends React.Component<IProps, IState> {
                 <DevTools store={Store} monitor={LogMonitor} theme="bright" visibleOnLoad={false} />
             </DebugPanel>}
 
-            <MIDI enabledNotes={enabledNotes} />
+            <MIDI enabledNotes={enabledNotes} onInputEventsChanged={this._handleInputEventsChanged} />
 
             <Navbar brand="Interval training" staticTop={true} fluid={true} toggleButton toggleNavKey={1}
                     {...toggleButton}>
@@ -64,7 +79,10 @@ export default class Chrome extends React.Component<IProps, IState> {
             </Navbar>
 
             <div className={classNames("container", ChromeCSS.content)}>
-                {this.props.children}
+                {React.cloneElement(this.props.children, {
+                    /* Injects inputEvents into child */
+                    inputEvents
+                })}
             </div>
         </div>;
     }

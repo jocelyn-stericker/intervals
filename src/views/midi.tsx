@@ -8,6 +8,7 @@ import WebBackend, {ensureEnabled as ensureAudioEnabled, isSupported as webBacke
 import PhysicalOutput from "../dragon/frontend/physicalOutput";
 import PhysicalInput from "../dragon/frontend/physicalInput";
 import DummyBackend from "../dragon/backends/dummy/dummy";
+import {IMidiEv} from "../dragon/backends/spec";
 import Synth from "../dragon/frontend/synth";
 import MidiBridge from "../dragon/frontend/midiBridge";
 
@@ -16,6 +17,7 @@ ensureAudioEnabled();
 
 export interface IProps {
     enabledNotes: {[key: string]: boolean};
+    onInputEventsChanged?: (currentNotes: {[key: number]: IMidiEv}) => void;
 }
 
 export interface IState {
@@ -30,6 +32,8 @@ export default class MIDI extends React.Component<IProps, IState> {
     };
 
     render() {
+        let {onInputEventsChanged} = this.props;
+
         return <DragonApp backend={DragonBackend} onMessage={this._onDragonMessage} onStateChanged={this._onDragonStateChanged}>
             <PhysicalOutput all audio>
                 <Synth
@@ -41,8 +45,11 @@ export default class MIDI extends React.Component<IProps, IState> {
                             }
                         ]}>
                     <MidiBridge channel={0} ref="midiBridge" />
-                    <PhysicalInput all midi/>
+                    <PhysicalInput all midi />
                 </Synth>
+                <MidiBridge channel={0} onCurrentEventsChanged={onInputEventsChanged}>
+                    <PhysicalInput all midi />
+                </MidiBridge>
             </PhysicalOutput>
         </DragonApp>;
     }

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import IMidiEv from './midiEv';
+import {IMidiEv} from '../spec';
 
 import {extend} from 'lodash';
 
@@ -28,13 +28,13 @@ export interface IEffectArgs {
     toUI: (msg: string) => void;
 }
 
-class Effect implements IEffectArgs{
+class Effect implements IEffectArgs {
     channels: number;
     emitAudio: (chan: number, ev: string) => void;
     emitMidi: (msg: IMidiEv) => void;
     id: number;
     state: any;
-    toUI: (msg: string) => void;
+    toUI: (msg: any) => void;
 
     constructor(args: IEffectArgs) {
         extend(this, args);

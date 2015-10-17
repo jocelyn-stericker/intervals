@@ -17,7 +17,7 @@
  */
 
 import Effect, {IEffectArgs} from "./effect";
-import IMidiEv from "./midiEv";
+import {IMidiEv} from "../spec";
 
 export interface IPassthroughArgs extends IEffectArgs {
     name: string;

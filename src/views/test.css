@@ -55,3 +55,13 @@
     color: #aaa;
     padding-left: 10px;
 }
+
+.rootHint {
+    font-weight: 600;
+    color: red;
+}
+
+.nextNoteHint {
+    font-weight: 600;
+    color: gray;
+}

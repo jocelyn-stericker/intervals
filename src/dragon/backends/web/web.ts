@@ -21,7 +21,7 @@ import {isEqual, find, findIndex, filter, forEach, some, times} from "lodash";
 
 import Soundfont from "./soundfont";
 import MidiBridge from "./midiBridge";
-import IMidiEv from "./midiEv";
+import {IMidiEv} from "../spec";
 import Passthrough from "./passthrough";
 import ReceiverF from "./receiverF";
 import ReceiverM from "./receiverM";
@@ -226,9 +226,6 @@ let startRunning = function(): void {
         audioNodeIn: micIn,
         audioNodeOut: null,
     });
-
-    console.log("WAH!");
-    (window as any).yolo = context;
 
     onStateChange = (newEngineState: string) => {
         if (!runner) {

@@ -19,7 +19,7 @@
 import {extend} from "lodash";
 
 import Effect, {IEffectArgs} from "./effect";
-import IMidiEv from "./midiEv";
+import {IMidiEv} from "../spec";
 
 let SoundfontPlayer = require("soundfont-player") as any;
 

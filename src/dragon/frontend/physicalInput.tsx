@@ -127,7 +127,6 @@ class PhysicalInput extends React.Component<IProps, IState> {
             });
         });
 
-
         forEach(this.currentConnections, (connection, key) => {
             if (!visited[key]) {
                 this.context.dragonBackend.disconnect(connection);
